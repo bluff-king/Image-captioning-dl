@@ -32,6 +32,8 @@ class Img2Vec():
         
         if self.model_name == 'inceptionv3':
             self.scaler = transforms.Resize((299, 299))
+        elif self.model_name == 'alexnet':
+            self.scaler = transforms.Resize((227, 227))
         else:     
             self.scaler = transforms.Resize((224, 224))
         self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # mean and std of ImageNet
@@ -120,7 +122,9 @@ class Img2Vec():
         
         # Return the feature vector 
         if self.model_name in ['alexnet', 'vgg11bn', 'vgg13bn', 'vgg16bn', 'vgg19bn']:
-            return my_embedding.cpu().numpy().flatten()
+            # return my_embedding.cpu().numpy().flatten()
+            return my_embedding.cpu().flatten()
 
         else:
-            return my_embedding.cpu().numpy().flatten()
+            # return my_embedding.cpu().numpy().flatten()
+            return my_embedding.cpu().flatten()
