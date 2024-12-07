@@ -1,9 +1,10 @@
+from collections import defaultdict
+import pandas as pd
 from tqdm import tqdm
 
 CAPTIONS_FILE = 'data/flickr8k/captions.txt'
 EMBEDDING_FILE = 'embedding/glove-wiki-gigaword-100.txt'
 
-import pandas as pd
 
 with open(EMBEDDING_FILE, 'rt', encoding='utf-8') as fr:
     full_content = fr.read().strip().split('\n')
@@ -18,7 +19,6 @@ df = pd.read_csv(CAPTIONS_FILE)
 df = list(df['caption'])
 
 is_in, is_out = 0, 0
-from collections import defaultdict
 out_dict = defaultdict(int)
 
 for caption in tqdm(df):

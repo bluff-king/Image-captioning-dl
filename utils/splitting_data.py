@@ -1,18 +1,12 @@
-import sys 
-import os 
-current_cwd = os.getcwd()
-new_cwd = '/'.join(current_cwd.split('\\')[:2])
-import pandas as pd 
-import numpy as np 
 from collections import defaultdict
 from sklearn.model_selection import train_test_split
 
 # Captions file 
-CAPTIONS_FILE = f'{new_cwd}/data/flickr8k/captions.txt'
+CAPTIONS_FILE = f'data/flickr8k/captions.txt'
 with open(CAPTIONS_FILE, 'r') as f: 
-    captions_data = f.readlines()[1:]   # Corrected: Skip header
+    captions_data = f.readlines()[1:]
 
-'''Split Images dataset to 3 datasets: train (0.8), validation (0.1), test (0.1)'''
+### Split dataset to 3 datasets: train (0.8), validation (0.1), test (0.1)
 
 image_captions_dict = defaultdict(list)
 
