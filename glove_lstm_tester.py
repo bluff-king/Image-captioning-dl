@@ -13,7 +13,7 @@ with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
 
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
+CAPTIONS_LENGTH = cfg['hyperparameters']['glove_lstm']['captions_length']
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 img_path = cfg['paths']['image_path']
 

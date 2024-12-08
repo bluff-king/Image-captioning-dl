@@ -23,7 +23,7 @@
             "data_ratio": 0.01
         },
 
-        "lstm": {
+        "glove_lstm": {
             "captions_length": 30,
             "embedding_dim": 104,
             "hidden_dim": 512,
@@ -37,7 +37,7 @@
             "num_workers": 2
         },
 
-        "very_basic":{
+        "own_embedder_lstm":{
             "captions_length": 30,
             "embedding_dim": 128,
             "hidden_dim": 512,

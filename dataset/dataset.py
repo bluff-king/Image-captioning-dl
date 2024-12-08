@@ -64,7 +64,7 @@ def transformer_collate(batch):
     return images, captions, next_tokens
 
 
-class LstmDataset(Dataset):
+class GloveLstmDataset(Dataset):
     def __init__(self, root_dir, captions, image_ids, transform=None):
         self.root_dir = root_dir
         self.transform = transform
@@ -100,7 +100,7 @@ class LstmDataset(Dataset):
         # return image, caption, next_token
         return image, caption, self.next_token[idx]
 
-def lstm_collate(batch):
+def glove_lstm_collate(batch):
     images = [item[0].unsqueeze(0) for item in batch]
     images = torch.cat(images, dim=0)
 

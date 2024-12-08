@@ -9,9 +9,9 @@ import json
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
     
-lstm_params = cfg['hyperparameters']['transformer']
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
-HIDDEN_SIZE = cfg['hyperparameters']['lstm']['hidden_dim']
+lstm_params = cfg['hyperparameters']['glove_lstm']
+CAPTIONS_LENGTH = lstm_params['captions_length']
+HIDDEN_SIZE = lstm_params['hidden_dim']
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 pad_idx = stoi("<PAD>")

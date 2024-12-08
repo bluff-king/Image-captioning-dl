@@ -1,7 +1,7 @@
 import wandb
 import time
 import datetime
-from dataset.dataset import LstmDataset, lstm_collate
+from dataset.dataset import GloveLstmDataset, glove_lstm_collate
 from dataset.get_data import get_data
 from torch.utils.data import DataLoader
 from models.lstm import ImageCaptioningLstm
@@ -15,14 +15,14 @@ with open("config.json", "r") as json_file:
 
 CAPTIONS_PATH = cfg['paths']['captions_path']
 IMAGE_PATH = cfg['paths']['image_path']
-lstm_params = cfg['hyperparameters']['lstm']
+lstm_params = cfg['hyperparameters']['glove_lstm']
 BATCH_SIZE = lstm_params['batch_size']
 DATA_RATIO = lstm_params['data_ratio']
 LEARNING_RATE = lstm_params['learning_rate']
 WEIGHT_DECAY = lstm_params['weight_decay']
 NUM_EPOCHS = lstm_params['num_epochs']
 NUM_CYCLES = lstm_params['num_cycles']
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
+CAPTIONS_LENGTH = lstm_params['captions_length']
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 EMBEDDING_DIM = lstm_params['embedding_dim']
 MAX_PLATEAU_COUNT = lstm_params['max_plateau_count']
@@ -35,13 +35,13 @@ def main() -> None:
         CAPTIONS_PATH, DATA_RATIO
     )
     
-    train_dataset = LstmDataset(
+    train_dataset = GloveLstmDataset(
         root_dir=IMAGE_PATH,
         captions=train_captions,
         image_ids=train_image_ids
     )
 
-    val_dataset = LstmDataset(
+    val_dataset = GloveLstmDataset(
         root_dir=IMAGE_PATH,
         captions=val_captions,
         image_ids=val_image_ids
@@ -52,7 +52,7 @@ def main() -> None:
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=2,
-        collate_fn=lstm_collate,
+        collate_fn=glove_lstm_collate,
         drop_last=True
     )
 
@@ -61,7 +61,7 @@ def main() -> None:
         batch_size=BATCH_SIZE,
         shuffle=False,
         num_workers=2,
-        collate_fn=lstm_collate,
+        collate_fn=glove_lstm_collate,
         drop_last=True
     )
     
@@ -84,7 +84,7 @@ def main() -> None:
         resume=RESUME,
         name=str(datetime.datetime.now()),
         config={
-            "model": "LSTM",
+            "model": "GloveLstm",
             "embedding_dim": EMBEDDING_DIM,
             'num_epochs': NUM_EPOCHS,
             "batch_size": BATCH_SIZE,
@@ -169,7 +169,7 @@ def main() -> None:
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': avg_val_loss,
-            }, f'{CHECKPOINT_PATH}lstm{CAPTIONS_LENGTH}.pth')
+            }, f'{CHECKPOINT_PATH}glove_lstm{CAPTIONS_LENGTH}.pth')
             print(f"Validation loss improved. Model checkpoint saved at epoch {epoch+1}.")
         else:
             plateau_count += 1
