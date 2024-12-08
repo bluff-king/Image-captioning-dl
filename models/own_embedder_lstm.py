@@ -2,14 +2,14 @@ import torch
 from torch import nn
 import numpy as np
 from torchvision import models
-from embedding.embedding import embs_npa, vocab_npa, stoi
+from embedding.own_embedding import embs_npa, vocab_npa, stoi
 
 import json
 
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
     
-lstm_params = cfg['hyperparameters']['glove_lstm']
+lstm_params = cfg['hyperparameters']['own_embedder_lstm']
 CAPTIONS_LENGTH = lstm_params['captions_length']
 HIDDEN_SIZE = lstm_params['hidden_dim']
 

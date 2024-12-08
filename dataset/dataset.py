@@ -4,6 +4,7 @@ import torch
 from embedding.embedding import stoi, numericalize
 from torch.utils.data import Dataset
 from torchvision import transforms
+import random
 
 import json
 
@@ -65,7 +66,7 @@ def transformer_collate(batch):
 
 
 class GloveLstmDataset(Dataset):
-    def __init__(self, root_dir, captions, image_ids, transform=None):
+    def __init__(self, root_dir, captions, image_ids, transform=transform):
         self.root_dir = root_dir
         self.transform = transform
 
@@ -109,3 +110,52 @@ def glove_lstm_collate(batch):
 
     next_tokens = torch.tensor([item[2] for item in batch])
     return images, captions, next_tokens
+
+
+
+class ContextToWordDataset(Dataset):
+    def __init__(self,
+                 all_description_indices,
+                 index_to_word_dict,
+                 word_to_index_dict,
+                 contextLength):
+        self.all_description_indices = all_description_indices
+        self.index_to_word_dict = index_to_word_dict
+        self.word_to_index_dict = word_to_index_dict
+        self.contextLength = contextLength
+
+    def __len__(self):
+        return len(self.all_description_indices)
+    
+    def __getitem__(self, idx):
+        ''' The method below will return a center word, and several context words around (in indices)'''
+        description_indices = self.all_description_indices[idx]        # get cap but presentation is full of indices from created vocab
+        
+        if len(description_indices) == 0:
+            return self.__getitem__((idx + 1) % len(self.all_description_indices))
+        
+        last_acceptable_center_index = len(description_indices) - 1          # prevent the center word is out of bound
+        
+        for position, index in enumerate(description_indices):
+            last_acceptable_center_index = position
+    
+        target_idx = random.choice(range(last_acceptable_center_index+1))
+
+        
+        context_around_idxs_Tsr = torch.zeros((2 * self.contextLength), dtype=torch.long)
+        
+        running_idx = target_idx - int(self.contextLength)    # maybe negative      
+        counter = 0
+        
+        # consider all word around target
+        while counter < 2 * self.contextLength:
+            if running_idx != target_idx:
+                # prevent index is negative or out of bound
+                if running_idx >= 0 and running_idx < len(description_indices):
+                    context_around_idxs_Tsr[counter] = description_indices[running_idx]
+                counter += 1
+            running_idx += 1
+        target_center_word_idx = description_indices[target_idx]
+        if target_center_word_idx >= len(self.word_to_index_dict):
+            raise ValueError(f"Invalid target index: {target_center_word_idx}")
+        return context_around_idxs_Tsr,  target_center_word_idx
