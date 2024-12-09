@@ -12,16 +12,20 @@ from dataset.numericalize_captions import NumericalizedDescriptions
 import json
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
-CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 
-EMBEDDING_DIMENSION = 124  
-NUM_EPOCHS = 2000
+
+own_lstm_params= cfg['hyperparameters']['own_embedder_lstm']
+
+EMBEDDING_DIMENSION = own_lstm_params['embedding_dim'] - 4 
+LEARNING_RATE = own_lstm_params['learning_rate']
+BATCH_SIZE = own_lstm_params['batch_size']
+NUM_EPOCHS = own_lstm_params['num_epochs']
+
+CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 MODEL_EMBEDDING_PATH = f'{CHECKPOINT_PATH}word_embedder_model.pth'
 MODEL_EMBEDDING_PATH_COPY = f'{CHECKPOINT_PATH}word_embedder_model_copy.pth'
 
-
 all_description_indices = NumericalizedDescriptions()
-
 
 all_mapping = get_mapped_data()
 word_to_index_dict, index_to_word_dict = description_tokens(all_mapping)
@@ -37,10 +41,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 wandb.init(
     project = "ProjectContextWords",
     config={
-        "learning_rate": 0.0001,
-        "batch_size": 32,
-        "epochs": 2000,
-        "embedding_dim": 124,
+        "learning_rate": LEARNING_RATE,
+        "batch_size": BATCH_SIZE,
+        "epochs": NUM_EPOCHS,
+        "embedding_dim": EMBEDDING_DIMENSION,
         "optimizer" : "ADAM",
         "train_ratio":0.8,
         "val_ratio": 0.1,
@@ -54,11 +58,11 @@ if use_cuda:
 
 word_embedder_parameters = filter(lambda p: p.requires_grad, word_embedder.parameters())
 
-optimizer = torch.optim.Adam(word_embedder_parameters, lr=0.0001)
+optimizer = torch.optim.Adam(word_embedder_parameters, lr=LEARNING_RATE)
 
 # logit will be passed to lossFcn, inside will have softmax
 lossFcn = nn.CrossEntropyLoss()
-all_dataloader = DataLoader(all_dataset, batch_size=32, shuffle=True) # when call, return one batch dataset
+all_dataloader = DataLoader(all_dataset, batch_size=BATCH_SIZE, shuffle=True) # when call, return one batch dataset
 lowestTrainLoss = float('inf')
 
 

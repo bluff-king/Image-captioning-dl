@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import numpy as np
 from torchvision import models
-from embedding.own_embedding import embs_npa, vocab_npa, stoi
+from embedding.embedding import own_embs_npa, own_vocab_npa, own_stoi
 
 import json
 
@@ -14,11 +14,11 @@ CAPTIONS_LENGTH = lstm_params['captions_length']
 HIDDEN_SIZE = lstm_params['hidden_dim']
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-pad_idx = stoi("<PAD>")
+pad_idx = own_stoi("<PAD>")
 
 
 class ImageCaptioningLstm(nn.Module):
-    def __init__(self, embed_size = embs_npa.shape[1], vocab_size = len(vocab_npa), hidden_size = HIDDEN_SIZE,pad_idx = pad_idx, dropout = 0.3):
+    def __init__(self, embed_size = own_embs_npa.shape[1], vocab_size = len(own_vocab_npa), hidden_size = HIDDEN_SIZE,pad_idx = pad_idx, dropout = 0.3):
         super(ImageCaptioningLstm, self).__init__()
         self.pad_idx = pad_idx
 
@@ -36,7 +36,7 @@ class ImageCaptioningLstm(nn.Module):
         self.linear = nn.Linear(hidden_size, vocab_size)
         
         # Embeddings
-        self.embedding = nn.Embedding.from_pretrained(torch.from_numpy(embs_npa).float(), freeze=True)
+        self.embedding = nn.Embedding.from_pretrained(torch.from_numpy(own_embs_npa).float(), freeze=True)
         
     def forward(self, images, captions):
         # Encode images
@@ -60,3 +60,4 @@ class ImageCaptioningLstm(nn.Module):
         output = self.linear(last_hidden_state)
         return output
     
+print(own_embs_npa.shape)
