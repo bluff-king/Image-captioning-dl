@@ -46,7 +46,7 @@
             "weight_decay": 1e-05,
             "max_plateau_count": 50,
             "num_cycles": 3,
-            "num_epochs": 3,
+            "num_epochs": 2000,
             "data_ratio": 0.01,
             "num_workers": 2
         }

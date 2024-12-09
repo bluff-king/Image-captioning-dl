@@ -1,7 +1,7 @@
 import wandb
 import time
 import datetime
-from dataset.dataset import GloveLstmDataset, glove_lstm_collate
+from dataset.dataset import OwnLstmDataset, glove_lstm_collate
 from dataset.get_data import get_data
 from torch.utils.data import DataLoader
 from models.own_embedder_lstm import ImageCaptioningLstm
@@ -34,13 +34,13 @@ def main() -> None:
         CAPTIONS_PATH, DATA_RATIO
     )
     
-    train_dataset = GloveLstmDataset(
+    train_dataset = OwnLstmDataset(
         root_dir=IMAGE_PATH,
         captions=train_captions,
         image_ids=train_image_ids
     )
 
-    val_dataset = GloveLstmDataset(
+    val_dataset = OwnLstmDataset(
         root_dir=IMAGE_PATH,
         captions=val_captions,
         image_ids=val_image_ids
