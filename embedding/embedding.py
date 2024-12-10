@@ -1,5 +1,5 @@
 import numpy as np
-import shiti;
+
 import torch
 from models.own_word_embedder import CenterWordPredictor
 from dataset.word_index_dict import description_tokens
@@ -14,10 +14,6 @@ EMBEDDING_FILE = cfg['paths']['embedding_file']
 EMBEDDING_DIMENSION = own_lstm_params['embedding_dim'] - 4 
 
 MODEL_EMBEDDING_PATH = f'{CHECKPOINT_PATH}word_embedder_model.pth'
-# Copy file
-shutil.copy(MODEL_EMBEDDING_PATH, MODEL_EMBEDDING_PATH_COPY)
-print(f"File was copied {MODEL_EMBEDDING_PATH} to {MODEL_EMBEDDING_PATH_COPY}")
-
 MODEL_EMBEDDING_PATH_COPY = f'{CHECKPOINT_PATH}word_embedder_model_copy.pth'
 
 word_to_index_dict, index_to_word_dict = description_tokens()
