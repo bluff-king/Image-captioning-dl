@@ -1,5 +1,5 @@
 import os
-import shutil
+
 import torch
 from torch import nn
 import wandb
@@ -94,10 +94,3 @@ for epoch in range(1,NUM_EPOCHS):
     print ("\nepoch {}: train_loss = {}".format(epoch, train_loss))
     wandb.log({'Train_loss': train_loss})
 wandb.finish()
-
-
-# Copy file
-shutil.copy(MODEL_EMBEDDING_PATH, MODEL_EMBEDDING_PATH_COPY)
-
-print(f"File was copied {MODEL_EMBEDDING_PATH} to {MODEL_EMBEDDING_PATH_COPY}")
-
