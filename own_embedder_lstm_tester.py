@@ -1,8 +1,9 @@
 from models.own_embedder_lstm import ImageCaptioningLstm
 import torch
 from PIL import Image
-from dataset.dataset import transform, stoi
-from embedding.own_embedding import vocab_npa
+from dataset.dataset import transform
+
+from embedding.embedding import own_vocab_npa, own_stoi
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -19,10 +20,10 @@ img_path = cfg['paths']['image_path']
 
 img_jpg = '1322323208_c7ecb742c6.jpg'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-pad_idx = stoi('<PAD>')
-sos_idx = stoi('<SOS>')
-eos_idx = stoi('<EOS>')
-unk_idx = stoi('<UNK>')
+pad_idx = own_stoi('<PAD>')
+sos_idx = own_stoi('<SOS>')
+eos_idx = own_stoi('<EOS>')
+unk_idx = own_stoi('<UNK>')
 
 num_captions = 10
 temperature = 0.2
@@ -59,7 +60,7 @@ def main() -> None:
                 if output == unk_idx:
                     continue
 
-                caption_str += f'{vocab_npa[output]} '
+                caption_str += f'{own_vocab_npa[output]} '
                 caption[0, next_idx] = output
 
                 if output == eos_idx:
