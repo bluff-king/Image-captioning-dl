@@ -38,7 +38,7 @@ class ImageCaptioningLstm(nn.Module):
         self.linear = nn.Linear(hidden_size, vocab_size)
         
         # Embeddings
-        self.embedding = nn.Embedding.from_pretrained(torch.from_numpy(own_embs_npa).float(), freeze=True)
+        self.embedding = nn.Embedding.from_pretrained(torch.from_numpy(own_embs_npa).float(), freeze=False)
         
     def forward(self, images, captions):
         # Encode images
