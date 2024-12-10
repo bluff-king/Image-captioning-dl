@@ -13,7 +13,7 @@ with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
 
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
+CAPTIONS_LENGTH = 20
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 img_path = cfg['paths']['image_path']
 
@@ -28,9 +28,9 @@ num_captions = 10
 temperature = 0.2
 
 def main() -> None:
-    trained_model = ImageCaptioningTransformer().to(device)
+    trained_model = ImageCaptioningTransformer(cap_len=CAPTIONS_LENGTH).to(device)
     state_dict = torch.load(
-        f'{CHECKPOINT_PATH}transformer_caplen{CAPTIONS_LENGTH}.pth',
+        f'{CHECKPOINT_PATH}transformer_caplen{CAPTIONS_LENGTH}_coco.pth',
         weights_only=True
     )['model_state_dict']
     trained_model.load_state_dict(state_dict)

@@ -40,7 +40,7 @@ def load_model(model_name, checkpoint_path):
     if model_name in ['Transformer20', 'Transformer25', 'Transformer20_COCO', 'Transformer25_COCO']:
         model = ImageCaptioningTransformer().to(device)
     
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     
