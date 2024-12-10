@@ -4,7 +4,7 @@ from models.transformer import ImageCaptioningTransformer
 from embedding.embedding import stoi, vocab_npa
 from PIL import Image 
 import re
-# from nltk.tokenize.treebank import TreebankWordDetokenizer
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 from dataset.dataset import transform
 
 import warnings
@@ -34,6 +34,8 @@ checkpoint_paths = {
     "Transformer20_COCO": f"{CHECKPOINT_PATH}transformer_caplen20_coco.pth",
     "Transformer25_COCO": f"{CHECKPOINT_PATH}transformer_caplen25_coco.pth", 
 }
+
+d = TreebankWordDetokenizer()
 
 
 # This function is used to load all the model by the name of model
@@ -84,7 +86,7 @@ def generate_caption(image, model_name, temperature, num_captions, max_unk_wait)
         caption = [[pad_idx for _ in range(max_caption_len)]]
         caption = torch.tensor(caption).to(device)
         caption[0, 0] = sos_idx
-        caption_str = '<SOS> '
+        caption_str = ['<SOS>']
 
         unk_wait = 0
         next_idx = 1
@@ -104,7 +106,8 @@ def generate_caption(image, model_name, temperature, num_captions, max_unk_wait)
                 
                 unk_wait = 0
 
-                caption_str += f'{vocab_npa[output]} '
+                # caption_str += f'{vocab_npa[output]} '
+                caption_str.append(vocab_npa[output])
                 caption[0, next_idx] = output
 
                 if output == eos_idx:
@@ -112,7 +115,8 @@ def generate_caption(image, model_name, temperature, num_captions, max_unk_wait)
 
                 next_idx += 1
 
-        ans.append(re.sub(r'[<SOS><EOS>]', '', caption_str))
+        caption_detokenized = d.detokenize(caption_str)
+        ans.append(re.sub(r'[<SOS><EOS>]', '', caption_detokenized))
         
     return "\n".join(ans)
 
@@ -126,9 +130,9 @@ interface = gr.Interface(
         gr.Slider(1, 20, value=5, step=1, label="Number of captions"),
         gr.Slider(0, 50, value=20, step=5, label="Max <UNK> wait")
     ],
-    outputs=gr.Textbox(label="Generated Caption", elem_id="custom-captions"),
+    outputs=gr.Textbox(label="Generated caption(s)", elem_id="custom-captions"),
     title="Image Captioning",
-    description="Upload an image to generate a caption using the trained model.",
+    description="Upload an image to generate caption(s) using the trained model.",
     theme="default",
     css="""
     #custom-captions {
