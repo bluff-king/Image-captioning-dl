@@ -16,7 +16,7 @@ with open("config.json", "r") as json_file:
 
 # Constants
 temperature = 0.2
-num_captions = 10
+num_captions = 5
 pad_idx = stoi('<PAD>')
 sos_idx = stoi('<SOS>')
 eos_idx = stoi('<EOS>')
@@ -30,12 +30,14 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 checkpoint_paths = {
     "Transformer20": f"{CHECKPOINT_PATH}transformer_caplen20.pth",
     "Transformer25": f"{CHECKPOINT_PATH}transformer_caplen25.pth",
+    "Transformer20_COCO": f"{CHECKPOINT_PATH}transformer_caplen20_coco.pth",
+    "Transformer25_COCO": f"{CHECKPOINT_PATH}transformer_caplen25_coco.pth", 
 }
 
 
 # This function is used to load all the model by the name of model
 def load_model(model_name, checkpoint_path):
-    if model_name in ['Transformer20', 'Transformer25']:
+    if model_name in ['Transformer20', 'Transformer25', 'Transformer20_COCO', 'Transformer25_COCO']:
         model = ImageCaptioningTransformer().to(device)
     
     checkpoint = torch.load(checkpoint_path, map_location=device)
@@ -66,10 +68,10 @@ def generate_caption(image, model_name):
     img = transform(Image.fromarray(image).convert("RGB"))
     img = torch.unsqueeze(img, 0).to(device)
 
-    if model_name == 'Transformer20':
+    if model_name in ['Transformer20', 'Transformer20_COCO']:
         max_caption_len = 20
     
-    elif model_name == 'Transformer25':
+    elif model_name in ['Transformer25', 'Transformer25_COCO']:
         max_caption_len = 25
     
     else: 
@@ -103,7 +105,7 @@ def generate_caption(image, model_name):
                 next_idx += 1
         ans.append(re.sub(r'[<SOS><EOS>]', '', caption_str))
         
-    return ans[0]
+    return ans
 
 # Gradio interface
 interface = gr.Interface(
