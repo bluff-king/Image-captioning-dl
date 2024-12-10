@@ -22,7 +22,7 @@ class ImageCaptioningLstm(nn.Module):
         super(ImageCaptioningLstm, self).__init__()
         self.pad_idx = pad_idx
 
-        # CNN encoder
+        # CNN encoders
         resnet = models.resnet50(weights='IMAGENET1K_V2')
         for param in resnet.parameters():
             param.requires_grad = False

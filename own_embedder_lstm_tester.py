@@ -3,7 +3,7 @@ import torch
 from PIL import Image
 from dataset.dataset import transform
 
-from embedding.embedding import own_vocab_npa, own_stoi
+from embedding.own_embedding import own_vocab_npa, own_stoi
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -26,7 +26,7 @@ eos_idx = own_stoi('<EOS>')
 unk_idx = own_stoi('<UNK>')
 
 num_captions = 10
-temperature = 0.2
+temperature = 0.01
 
 def main() -> None:
     trained_model = ImageCaptioningLstm().to(device)

@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import numpy as np
 from torchvision import models
-from embedding.embedding import own_embs_npa, own_vocab_npa, own_stoi
+
 
 import json
 
@@ -14,16 +14,18 @@ CAPTIONS_LENGTH = lstm_params['captions_length']
 HIDDEN_SIZE = lstm_params['hidden_dim']
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+from embedding.own_embedding import own_embs_npa, own_vocab_npa, own_stoi
 pad_idx = own_stoi("<PAD>")
 
-
 class ImageCaptioningLstm(nn.Module):
+    
     def __init__(self, embed_size = own_embs_npa.shape[1], vocab_size = len(own_vocab_npa), hidden_size = HIDDEN_SIZE,pad_idx = pad_idx, dropout = 0.3):
         super(ImageCaptioningLstm, self).__init__()
         self.pad_idx = pad_idx
 
         # CNN encoder
-        resnet = models.resnet50()
+        resnet = models.resnet50(weights='IMAGENET1K_V2')
         for param in resnet.parameters():
             param.requires_grad = False
         self.cnn = nn.Sequential(*list(resnet.children())[:-2])  # Remove the last two layers
@@ -59,5 +61,3 @@ class ImageCaptioningLstm(nn.Module):
     
         output = self.linear(last_hidden_state)
         return output
-    
-print(own_embs_npa.shape)

@@ -2,7 +2,7 @@ from PIL import Image
 import os
 import torch
 from embedding.embedding import stoi, numericalize
-from embedding.embedding import own_stoi, own_numericalize
+
 from torch.utils.data import Dataset
 from torchvision import transforms
 import random
@@ -115,6 +115,7 @@ def glove_lstm_collate(batch):
 
 class OwnLstmDataset(Dataset):
     def __init__(self, root_dir, captions, image_ids, transform=transform):
+        from embedding.own_embedding import own_stoi, own_numericalize
         self.root_dir = root_dir
         self.transform = transform
 

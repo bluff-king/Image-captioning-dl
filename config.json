@@ -24,27 +24,27 @@
         },
 
         "glove_lstm": {
-            "captions_length": 30,
+            "captions_length": 25,
             "embedding_dim": 104,
             "hidden_dim": 512,
             "batch_size": 32,
             "learning_rate": 1e-4,
             "weight_decay": 1e-05,
-            "max_plateau_count": 50,
+            "max_plateau_count": 10,
             "num_cycles": 3,
             "num_epochs": 1000,
-            "data_ratio": 0.01,
+            "data_ratio": 1,
             "num_workers": 2
         },
 
         "own_embedder_lstm":{
-            "captions_length": 30,
+            "captions_length": 25,
             "embedding_dim": 128,
             "hidden_dim": 512,
             "batch_size": 32,
             "learning_rate": 1e-4,
             "weight_decay": 1e-05,
-            "max_plateau_count": 50,
+            "max_plateau_count": 10,
             "num_cycles": 3,
             "num_epochs": 2000,
             "data_ratio": 0.01,

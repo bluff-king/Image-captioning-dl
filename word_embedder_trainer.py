@@ -1,21 +1,11 @@
 import os
 import shutil
 import torch
-from torch import nn
-import wandb
-from torch.utils.data import DataLoader
-from models.own_word_embedder import CenterWordPredictor
-from dataset.own_embedder_data import get_mapped_data
-from dataset.word_index_dict import description_tokens
-from dataset.dataset import ContextToWordDataset
-from dataset.numericalize_captions import NumericalizedDescriptions
+
 import json
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
-
-
 own_lstm_params= cfg['hyperparameters']['own_embedder_lstm']
-
 EMBEDDING_DIMENSION = own_lstm_params['embedding_dim'] - 4 
 LEARNING_RATE = own_lstm_params['learning_rate']
 BATCH_SIZE = own_lstm_params['batch_size']
@@ -24,11 +14,35 @@ NUM_EPOCHS = own_lstm_params['num_epochs']
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 MODEL_EMBEDDING_PATH = f'{CHECKPOINT_PATH}word_embedder_model.pth'
 MODEL_EMBEDDING_PATH_COPY = f'{CHECKPOINT_PATH}word_embedder_model_copy.pth'
+# Copy file
+shutil.copy(MODEL_EMBEDDING_PATH, MODEL_EMBEDDING_PATH_COPY)
+print(f"File was copied {MODEL_EMBEDDING_PATH} to {MODEL_EMBEDDING_PATH_COPY}")
 
-all_description_indices = NumericalizedDescriptions()
+from torch import nn
+import wandb
+from torch.utils.data import DataLoader
+from models.own_word_embedder import CenterWordPredictor
+from dataset.own_embedder_data import get_mapped_data
+from dataset.dataset import ContextToWordDataset
+from dataset.word_index_dict import description_tokens, clean_and_tokenize
 
 all_mapping = get_mapped_data()
 word_to_index_dict, index_to_word_dict = description_tokens(all_mapping)
+
+def NumericalizedDescriptions(all_mapping = all_mapping, word_to_index_dict = word_to_index_dict):
+    all_description_indices = []
+    
+    for _, captions in all_mapping.items():
+        for caption in captions:
+            tokens = clean_and_tokenize(caption)
+            indices = [word_to_index_dict[token] for token in tokens]
+            all_description_indices.append(indices)
+    
+    return all_description_indices
+
+
+all_description_indices = NumericalizedDescriptions()
+
 vocabulary_size = len(word_to_index_dict)
 
 all_dataset = ContextToWordDataset(all_description_indices, index_to_word_dict,
