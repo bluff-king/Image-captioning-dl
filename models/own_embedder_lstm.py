@@ -23,7 +23,7 @@ class ImageCaptioningLstm(nn.Module):
         self.pad_idx = pad_idx
 
         # CNN encoder
-        resnet = models.resnet50(weights='IMAGENET1K_V2')
+        resnet = models.resnet50()
         for param in resnet.parameters():
             param.requires_grad = False
         self.cnn = nn.Sequential(*list(resnet.children())[:-2])  # Remove the last two layers
