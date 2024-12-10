@@ -1,8 +1,8 @@
 from models.transformer import ImageCaptioningTransformer
 import torch
 from PIL import Image
-from dataset.dataset import transform, stoi
-from embedding.embedding import vocab_npa
+from dataset.dataset import transform
+from embedding.embedding import vocab_npa, stoi
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -13,7 +13,6 @@ with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
 
-CAPTIONS_LENGTH = 20
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 img_path = cfg['paths']['image_path']
 
@@ -24,8 +23,10 @@ sos_idx = stoi('<SOS>')
 eos_idx = stoi('<EOS>')
 unk_idx = stoi('<UNK>')
 
+CAPTIONS_LENGTH = 20
 num_captions = 10
 temperature = 0.2
+max_unk_wait = 30
 
 def main() -> None:
     trained_model = ImageCaptioningTransformer(cap_len=CAPTIONS_LENGTH).to(device)
@@ -47,6 +48,7 @@ def main() -> None:
         caption[0, 0] = sos_idx
         caption_str = '<SOS> '
 
+        unk_wait = 0
         next_idx = 1
         with torch.no_grad():
             while next_idx < CAPTIONS_LENGTH:
@@ -57,7 +59,11 @@ def main() -> None:
                 output = torch.multinomial(output_probs, num_samples=1).item()
 
                 if output == unk_idx:
-                    continue
+                    unk_wait += 1
+                    if unk_wait < max_unk_wait:
+                        continue
+                
+                unk_wait = 0
 
                 caption_str += f'{vocab_npa[output]} '
                 caption[0, next_idx] = output
