@@ -8,6 +8,7 @@ from models.own_embedder_lstm import ImageCaptioningLstm
 from models.lr_scheduler import get_scheduler
 import torch
 from torch import nn
+from tqdm import tqdm
 
 import json
 with open("config.json", "r") as json_file:
@@ -28,7 +29,7 @@ EMBEDDING_DIM = lstm_params['embedding_dim']
 MAX_PLATEAU_COUNT = lstm_params['max_plateau_count']
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+print(device)
 def main() -> None:
     train_captions, train_image_ids, val_captions, val_image_ids, _, _ = get_data(
         CAPTIONS_PATH, DATA_RATIO
@@ -112,7 +113,7 @@ def main() -> None:
 
         print(f"\nEpoch [{epoch+1}/{NUM_EPOCHS}]")
 
-        for idx, (images, captions, next_tokens) in enumerate(train_loader):
+        for idx, (images, captions, next_tokens) in enumerate(tqdm(train_loader, desc = f'Training Epoch {epoch + 1}', leave = False)):
             images = images.to(device)
             captions = captions.to(device)
             next_tokens = next_tokens.to(device)

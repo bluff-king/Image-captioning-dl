@@ -30,7 +30,7 @@ temperature = 0.2
 def main() -> None:
     trained_model = ImageCaptioningLstm().to(device)
     state_dict = torch.load(
-        f'{CHECKPOINT_PATH}lstm_caplen{CAPTIONS_LENGTH}.pth',
+        f'{CHECKPOINT_PATH}glove_lstm{CAPTIONS_LENGTH}.pth',
         weights_only=True
     )['model_state_dict']
     trained_model.load_state_dict(state_dict)
