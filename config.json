@@ -30,7 +30,7 @@
             "batch_size": 32,
             "learning_rate": 1e-4,
             "weight_decay": 1e-05,
-            "max_plateau_count": 10,
+            "max_plateau_count":10,
             "num_cycles": 3,
             "num_epochs": 1000,
             "data_ratio": 1,
@@ -50,6 +50,20 @@
             "num_epochs_2": 100,
             "data_ratio": 1,
             "num_workers": 2
+        },
+        "glove_lstm_attention": {
+            "captions_length": 20,
+            "embedding_dim": 104,
+            "hidden_dim": 512,
+            "attention_dim": 128,
+            "batch_size": 64,
+            "learning_rate": 1e-4,
+            "weight_decay": 1e-05,
+            "max_plateau_count": 5,
+            "num_cycles": 3,
+            "num_epochs": 100,
+            "data_ratio": 1,
+            "num_workers": 4
         }
     }
 }
