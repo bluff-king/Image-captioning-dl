@@ -10,7 +10,7 @@ import json
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
     
-lstm_params = cfg['hyperparameters']['glove_lstm']
+lstm_params = cfg['hyperparameters']['glove_lstm_attention']
 CAPTIONS_LENGTH = lstm_params['captions_length']
 HIDDEN_SIZE = lstm_params['hidden_dim']
 ATTENTION_DIM = lstm_params['attention_dim']

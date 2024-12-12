@@ -17,7 +17,7 @@ CAPTIONS_LENGTH = cfg['hyperparameters']['glove_lstm_attention']['captions_lengt
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 img_path = cfg['paths']['image_path']
 
-img_jpg = '2667783499_3a4f38f636.jpg'
+img_jpg = '3637966641_1b108a35ba.jpg'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 pad_idx = stoi('<PAD>')
 sos_idx = stoi('<SOS>')
@@ -30,7 +30,7 @@ temperature = 0.2
 def main() -> None:
     trained_model = ImageCaptioningLstm().to(device)
     state_dict = torch.load(
-        f'{CHECKPOINT_PATH}best_model{CAPTIONS_LENGTH}.pth',
+        f'{CHECKPOINT_PATH}lstm_attention{CAPTIONS_LENGTH}.pth',
         weights_only=True
     )
     trained_model.load_state_dict(state_dict)
