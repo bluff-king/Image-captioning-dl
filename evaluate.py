@@ -27,7 +27,7 @@ unk_idx = stoi('<UNK>')
 
 CAPTIONS_LENGTH = 20
 num_captions = 5
-temperature = 0.3
+temperature = 0.1
 max_unk_wait = 30
 
 references = []
