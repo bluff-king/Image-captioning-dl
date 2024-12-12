@@ -3,6 +3,7 @@ from evaluation.METEOR import METEOR
 from evaluation.ROUGE import ROUGE_L
 import json
 import pandas as pd 
+import numpy as np 
 
 from models.transformer import ImageCaptioningTransformer
 import torch
@@ -24,9 +25,9 @@ sos_idx = stoi('<SOS>')
 eos_idx = stoi('<EOS>')
 unk_idx = stoi('<UNK>')
 
-CAPTIONS_LENGTH = 25
-num_captions = 1
-temperature = 0.2
+CAPTIONS_LENGTH = 20
+num_captions = 5
+temperature = 0.3
 max_unk_wait = 30
 
 references = []
@@ -39,8 +40,6 @@ test_captions = list(test_data[1])
 
 for i in range(0, len(test_captions), 5):
     references.append(test_captions[i:i+5])
-    
-references = references
 
 
 trained_model = ImageCaptioningTransformer(cap_len=CAPTIONS_LENGTH).to(device)
@@ -52,12 +51,13 @@ trained_model.load_state_dict(state_dict)
 trained_model.eval()
 
 
-def generate_caption_single_img(model, img_jpg):
+def generate_caption_single_img(model, img_jpg, num_captions=1):
     img = transform(
         Image.open(f'{IMAGE_PATH}{img_jpg}').convert('RGB')
     )
     img = torch.unsqueeze(img, 0).to(device)
 
+    candidates = []
     for _ in range(num_captions):
         caption = [[pad_idx for _ in range(CAPTIONS_LENGTH)]]
         caption = torch.tensor(caption).to(device)
@@ -88,13 +88,14 @@ def generate_caption_single_img(model, img_jpg):
                     break
 
                 next_idx += 1
-        return caption_str
+        candidates.append(caption_str)
+    return candidates
 
-def compute_scores(model, image_ids, references):
+def compute_scores_random(model, image_ids, references):
     candidates = []
     cnt = 0
     for img_jpg in image_ids:
-        candidates.append(generate_caption_single_img(model, img_jpg))
+        candidates.extend(generate_caption_single_img(model, img_jpg))
         cnt += 1
         print(cnt)
         
@@ -106,8 +107,33 @@ def compute_scores(model, image_ids, references):
 
     return list(d.items())
 
-scores = compute_scores(model=trained_model, image_ids=image_ids, references=references)
-print(scores)
+def compute_scores_best_of_n(model, image_ids, references):
+    candidates = []
+    cnt = 0
+    for img_jpg in image_ids: 
+        candidates.append(generate_caption_single_img(model, img_jpg, num_captions=num_captions))
+        cnt += 1
+        print(cnt)
+    
+    bleu1 = []
+    bleu4 = []
+    meteor = []
+    rouge_l = []
+    for candidate, reference in zip(candidates, references):
+        bleu1.append(max(BLEU([reference], [sentence]).bleu1() for sentence in candidate))      
+        bleu4.append(max(BLEU([reference], [sentence]).bleu4() for sentence in candidate))
+        meteor.append(max(METEOR([reference], [sentence]).meteor() for sentence in candidate))
+        rouge_l.append(max(ROUGE_L([reference], [sentence]).rouge_l() for sentence in candidate))  
+    
+    d = {'BLEU-1': np.mean(bleu1), 'BLEU-4': np.mean(bleu4), 'METEOR': np.mean(meteor), 'ROUGE-L': np.mean(rouge_l)}
+    
+    return d
+
+scores_random = compute_scores_random(model=trained_model, image_ids=image_ids, references=references)
+print(scores_random)
+
+scores_best_of_n = compute_scores_best_of_n(model=trained_model, image_ids=image_ids, references=references)
+print(scores_best_of_n)
 
 
 

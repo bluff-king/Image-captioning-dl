@@ -3,8 +3,8 @@ from rouge_score import rouge_scorer, scoring
 class ROUGE_L: 
     
     def __init__(self, references, candidates):
-        self.references = references 
-        self.candidates = candidates 
+        self.references = references.lower() 
+        self.candidates = candidates.lower()
     
     def rouge_l(self):
         total = 0

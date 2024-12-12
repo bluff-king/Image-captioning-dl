@@ -14,8 +14,8 @@ class METEOR:
         candidates (list of str): A list of candidate sentences. Each candidate sentence is a string.
         """
         
-        self.references = [[reference.split() for reference in reference_corpus] for reference_corpus in references]
-        self.candidates = [candidate.split() for candidate in candidates]
+        self.references = [[reference.lower().split() for reference in reference_corpus] for reference_corpus in references]
+        self.candidates = [candidate.lower().split() for candidate in candidates]
 
         
     def meteor(self):
