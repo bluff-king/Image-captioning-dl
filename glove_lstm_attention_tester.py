@@ -1,4 +1,4 @@
-from models.lstm import ImageCaptioningLstm
+from models.lstm_attention import ImageCaptioningLstm
 import torch
 from PIL import Image
 from dataset.dataset import transform, stoi
@@ -13,7 +13,7 @@ with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
 
-CAPTIONS_LENGTH = cfg['hyperparameters']['glove_lstm']['captions_length']
+CAPTIONS_LENGTH = cfg['hyperparameters']['glove_lstm_attention']['captions_length']
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 img_path = cfg['paths']['image_path']
 
@@ -30,7 +30,7 @@ temperature = 0.2
 def main() -> None:
     trained_model = ImageCaptioningLstm().to(device)
     state_dict = torch.load(
-        f'{CHECKPOINT_PATH}best_model2.pth',
+        f'{CHECKPOINT_PATH}best_model{CAPTIONS_LENGTH}.pth',
         weights_only=True
     )
     trained_model.load_state_dict(state_dict)
