@@ -10,7 +10,6 @@ with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
 transformer_params = cfg['hyperparameters']['transformer']
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
 NUM_HEADS = transformer_params['num_heads']
 NUM_ENCODER_LAYERS = transformer_params['num_encoder_layers']
 NUM_DECODER_LAYERS = transformer_params['num_decoder_layers']
@@ -39,6 +38,7 @@ class PositionalEncoding(nn.Module):
 class ImageCaptioningTransformer(nn.Module):
     def __init__(
         self,
+        cap_len,
         embed_size=embs_npa.shape[1],
         vocab_size=len(vocab_npa),
         num_heads=NUM_HEADS,
@@ -48,6 +48,7 @@ class ImageCaptioningTransformer(nn.Module):
     ):
         super(ImageCaptioningTransformer, self).__init__()
         self.pad_idx = pad_idx
+        self.cap_len = cap_len
 
         # CNN Encoder
         resnet = models.resnet50(weights='IMAGENET1K_V2')
@@ -111,9 +112,9 @@ class ImageCaptioningTransformer(nn.Module):
         embeddings = self.positional_encoding(embeddings)
 
         # Create masks
-        # tgt_mask = nn.Transformer.generate_square_subsequent_mask(CAPTIONS_LENGTH).to(embeddings.device)
+        # tgt_mask = nn.Transformer.generate_square_subsequent_mask(self.cap_len).to(embeddings.device)
         tgt_mask = torch.triu(torch.ones(
-            (CAPTIONS_LENGTH, CAPTIONS_LENGTH), device=captions.device), diagonal=1).bool()
+            (self.cap_len, self.cap_len), device=captions.device), diagonal=1).bool()
 
         tgt_key_padding_mask = (captions == self.pad_idx)  # Corrected line
 

@@ -23,7 +23,7 @@ LEARNING_RATE = transformer_params['learning_rate']
 WEIGHT_DECAY = transformer_params['weight_decay']
 NUM_EPOCHS = transformer_params['num_epochs']
 NUM_CYCLES = transformer_params['num_cycles']
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
+CAPTIONS_LENGTH = 20
 CHECKPOINT_PATH = cfg['paths']['checkpoint_path']
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -36,12 +36,14 @@ def main() -> None:
     )
 
     train_dataset = TransformerDataset(
+        cap_len=CAPTIONS_LENGTH,
         root_dir=IMAGE_PATH,
         captions=train_captions,
         image_ids=train_image_ids
     )
 
     val_dataset = TransformerDataset(
+        cap_len=CAPTIONS_LENGTH,
         root_dir=IMAGE_PATH,
         captions=val_captions,
         image_ids=val_image_ids
@@ -65,7 +67,7 @@ def main() -> None:
         drop_last=True
     )
 
-    model = ImageCaptioningTransformer().to(device)
+    model = ImageCaptioningTransformer(cap_len=CAPTIONS_LENGTH).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(
         model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY
@@ -156,14 +158,14 @@ def main() -> None:
         if avg_val_loss < best_val_loss:
             plateau_count = 0
             best_val_loss = avg_val_loss
-            # print("Validation loss improved. Not saved")
-            torch.save({
-                'epoch': epoch + 1,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': avg_val_loss,
-            }, f'{CHECKPOINT_PATH}transformer_caplen{CAPTIONS_LENGTH}.pth')
-            print(f"Validation loss improved. Model checkpoint saved at epoch {epoch+1}.")
+            print("Validation loss improved. Not saved")
+            # torch.save({
+            #     'epoch': epoch + 1,
+            #     'model_state_dict': model.state_dict(),
+            #     'optimizer_state_dict': optimizer.state_dict(),
+            #     'loss': avg_val_loss,
+            # }, f'{CHECKPOINT_PATH}transformer_caplen{CAPTIONS_LENGTH}.pth')
+            # print(f"Validation loss improved. Model checkpoint saved at epoch {epoch+1}.")
         else:
             plateau_count += 1
             print("Validation loss did not improve.")

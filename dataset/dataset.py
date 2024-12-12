@@ -10,8 +10,6 @@ import json
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
 
-CAPTIONS_LENGTH = cfg['hyperparameters']['captions_length']
-
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -19,9 +17,10 @@ transform = transforms.Compose([
 
 
 class TransformerDataset(Dataset):
-    def __init__(self, root_dir, captions, image_ids, transform=transform):
+    def __init__(self, cap_len, root_dir, captions, image_ids, transform=transform):
         self.root_dir = root_dir
         self.transform = transform
+        self.cap_len = cap_len
 
         self.captions_augmented = []
         self.imgs_augmented = []
@@ -30,12 +29,12 @@ class TransformerDataset(Dataset):
             numericalized_caption = [stoi("<SOS>")]
             numericalized_caption += numericalize(caption)
             numericalized_caption.append(stoi("<EOS>"))
-            for idx in range(min(len(numericalized_caption), CAPTIONS_LENGTH) - 1):
+            for idx in range(min(len(numericalized_caption), self.cap_len) - 1):
                 self.imgs_augmented.append(img)
                 # pre-pad here
                 padded_caption = numericalized_caption[:idx + 1] \
-                    + [stoi('<PAD>')] * CAPTIONS_LENGTH
-                padded_caption = padded_caption[:CAPTIONS_LENGTH]
+                    + [stoi('<PAD>')] * self.cap_len
+                padded_caption = padded_caption[:self.cap_len]
                 self.captions_augmented.append(padded_caption)
                 self.next_token.append(numericalized_caption[idx + 1])
 
