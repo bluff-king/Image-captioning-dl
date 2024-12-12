@@ -11,6 +11,7 @@ from PIL import Image
 from dataset.dataset import transform
 from embedding.embedding import vocab_npa, stoi
 
+import re 
 
 with open("config.json", "r") as json_file:
     cfg = json.load(json_file)
@@ -27,7 +28,7 @@ unk_idx = stoi('<UNK>')
 
 CAPTIONS_LENGTH = 20
 num_captions = 5
-temperature = 0.1
+temperature = 0.2
 max_unk_wait = 30
 
 references = []
@@ -88,6 +89,8 @@ def generate_caption_single_img(model, img_jpg, num_captions=1):
                     break
 
                 next_idx += 1
+        caption_str = re.sub(r'[<SOS><EOS>]', '', caption_str)
+        caption_str = caption_str.strip()
         candidates.append(caption_str)
     return candidates
 
@@ -105,7 +108,7 @@ def compute_scores_random(model, image_ids, references):
     rouge_l = ROUGE_L(references, candidates)
     d = {'BLEU-1': bleu.bleu1(), 'BLEU-4': bleu.bleu4(), 'METEOR': meteor.meteor(), 'ROUGE-L': rouge_l.rouge_l()}
 
-    return list(d.items())
+    return list(d.items()), candidates
 
 def compute_scores_best_of_n(model, image_ids, references):
     candidates = []
@@ -127,9 +130,9 @@ def compute_scores_best_of_n(model, image_ids, references):
     
     d = {'BLEU-1': np.mean(bleu1), 'BLEU-4': np.mean(bleu4), 'METEOR': np.mean(meteor), 'ROUGE-L': np.mean(rouge_l)}
     
-    return d
+    return list(d.items())
 
-scores_random = compute_scores_random(model=trained_model, image_ids=image_ids, references=references)
+scores_random = compute_scores_random(model=trained_model, image_ids=image_ids, references=references)[0]
 print(scores_random)
 
 scores_best_of_n = compute_scores_best_of_n(model=trained_model, image_ids=image_ids, references=references)
