@@ -69,7 +69,7 @@ class GloveLstmDataset(Dataset):
     def __init__(self, root_dir, captions, image_ids, transform=transform):
         self.root_dir = root_dir
         self.transform = transform
-
+        self.captions_length = cfg['hyperparameters']['glove_lstm']['captions_length']
         self.captions_augmented = []
         self.imgs_augmented = []
         self.next_token = []
@@ -77,11 +77,11 @@ class GloveLstmDataset(Dataset):
             numericalized_caption = [stoi("<SOS>")]
             numericalized_caption += numericalize(caption)
             numericalized_caption.append(stoi("<EOS>"))
-            for idx in range(min(len(numericalized_caption), CAPTIONS_LENGTH) - 1):
+            for idx in range(min(len(numericalized_caption), self.captions_length) - 1):
                 self.imgs_augmented.append(img)
                 # pre-pad here
-                padded_caption = numericalized_caption[:idx+1] + [stoi('<PAD>')] * CAPTIONS_LENGTH
-                padded_caption = padded_caption[:CAPTIONS_LENGTH]
+                padded_caption = numericalized_caption[:idx+1] + [stoi('<PAD>')] * self.captions_length
+                padded_caption = padded_caption[:self.captions_length]
                 self.captions_augmented.append(padded_caption)
                 self.next_token.append(numericalized_caption[idx + 1])
             
@@ -117,7 +117,7 @@ class OwnLstmDataset(Dataset):
         from embedding.own_embedding import own_stoi, own_numericalize
         self.root_dir = root_dir
         self.transform = transform
-
+        self.captions_length = cfg['hyperparameters']['own_embedder_lstm']['captions_length']
         self.captions_augmented = []
         self.imgs_augmented = []
         self.next_token = []
@@ -125,11 +125,11 @@ class OwnLstmDataset(Dataset):
             numericalized_caption = [own_stoi("<SOS>")]
             numericalized_caption += own_numericalize(caption)
             numericalized_caption.append(own_stoi("<EOS>"))
-            for idx in range(min(len(numericalized_caption), CAPTIONS_LENGTH) - 1):
+            for idx in range(min(len(numericalized_caption), self.captions_length) - 1):
                 self.imgs_augmented.append(img)
                 # pre-pad here
-                padded_caption = numericalized_caption[:idx+1] + [own_stoi('<PAD>')] * CAPTIONS_LENGTH
-                padded_caption = padded_caption[:CAPTIONS_LENGTH]
+                padded_caption = numericalized_caption[:idx+1] + [own_stoi('<PAD>')] * self.captions_length
+                padded_caption = padded_caption[:self.captions_length]
                 self.captions_augmented.append(padded_caption)
                 self.next_token.append(numericalized_caption[idx + 1])
             
