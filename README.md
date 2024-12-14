@@ -81,5 +81,7 @@ Run ```python GUI.py``` to have a better experience
 
 [10] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and I. Polo-sukhin. Attention is all you need, 2023. URL [https://arxiv.org/abs/1706.03762].
 
+[11] Y. Chu, X. Yue, L. Yu, M. Sergei, Z. Wang, and Y. Zhang. Automatic image captioning based on resnet50 and lstm with soft attention. Wirel. Commun. Mob. Comput., 2020, Jan. 2020. ISSN 1530-8669. doi: 10.1155/2020/8909458. URL [https://doi.org/10.1155/2020/8909458].
+
 ## License
 This project is licensed under the [MIT License](https://mit-license.org/).
