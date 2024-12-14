@@ -79,8 +79,18 @@ def load_model(model_name, checkpoint_path):
 
 
 all_models = {}
+load_success = []
+load_fail = []
 for model_name, checkpoint_path in checkpoint_paths.items():
-    all_models[model_name] = load_model(model_name, checkpoint_path)
+    try:
+        all_models[model_name] = load_model(model_name, checkpoint_path)
+        load_success.append(model_name)
+    except:
+        load_fail.append(model_name)
+
+warning_str = ''
+if load_fail:
+    warning_str += f' (Fail to load model(s): {', '.join(load_fail)})'
 
 
 # This function is used to generate caption for each model
@@ -189,23 +199,16 @@ def generate_caption(image, model_name, temperature, num_captions, max_unk_wait)
 interface = gr.Interface(
     fn=generate_caption,
     inputs=[
-        gr.Image(type="numpy", label="Upload an image"),
-        gr.Dropdown(choices=list(all_models.keys()), label="Select Model"),
-        gr.Slider(0, 1.0, value=0.2, step=0.05, label="Temperature"),
-        gr.Slider(1, 20, value=5, step=1, label="Number of captions"),
-        gr.Slider(0, 50, value=20, step=5, label="Max <UNK> wait")
+        gr.Image(type='numpy', label='Upload an image'),
+        gr.Dropdown(choices=load_success, label=f'Select model{warning_str}'),
+        gr.Slider(0, 1.0, value=0.2, step=0.05, label='Temperature'),
+        gr.Slider(1, 20, value=5, step=1, label='Number of captions'),
+        gr.Slider(0, 50, value=20, step=5, label='Max <UNK> wait')
     ],
-    outputs=gr.Textbox(label="Generated caption(s)", elem_id="custom-captions"),
-    title="Image Captioning",
-    description="Upload an image to generate caption(s) using the trained model.",
-    theme="default",
-    css="""
-    #custom-captions {
-        font-size: 20px;
-        font-weight: bold;
-        line-height: 1.5;
-    }
-    """
+    outputs=gr.Textbox(label='Generated caption(s)'),
+    title='Image Captioning',
+    description='Upload an image to generate caption(s) using the trained model.',
+    theme='default'
 )
 
 
