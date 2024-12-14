@@ -87,7 +87,7 @@ Run ```python GUI.py``` to have a better experience
 This project is licensed under the [MIT License](https://mit-license.org/).
 
 ## Contributors
-- Lương Hữu Thành(https://github.com/fisherman611) - 20225458 
+- [Lương Hữu Thành](https://github.com/fisherman611) - 20225458 
 - [Vũ Trung Thành](https://github.com/thanh309) - 20220066
 - [Nguyễn Mậu Trung](https://github.com/Pearlcentt) - 20225534
 - [Đoàn Anh Vũ](https://github.com/bluff-king) - 20225465
