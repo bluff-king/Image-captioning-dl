@@ -40,6 +40,9 @@ Clone the repository, change the current working directory to this repository's 
 ```
 git clone https://github.com/bluff-king/Image-captioning-dl.git
 ```
+```
+cd Image-captioning-dl
+```
 Download data from [Kaggle](https://www.kaggle.com/) follow [this link](https://www.kaggle.com/datasets/adityajn105/flickr8k/code), extract and put the folder **flickr8k** inside data folder, it should looks like this
 ```
 |___data
