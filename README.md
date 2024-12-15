@@ -34,7 +34,7 @@ All the code is in [Python](https://www.python.org/) language, we use [Pytorch](
 ## Requirements
 - Python version 3.10 or higher
 - CUDA version 12.0 or higher
-- All necessary library in hte code via ```pip install <library_name>```
+- All necessary library in the code via ```pip install <library_name>```
 ## Installation
 Clone the repository, change the current working directory to this repository's root folder:
 ```
