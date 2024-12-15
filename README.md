@@ -57,11 +57,11 @@ wandb login <your_api_key>
 ```
 
 ## Train, Test and GUI
-If you just want to use our models, **do not run** *trainer files*. Run this to start training any model you want such as *transformer_trainer.py*, or test the model with some images through testter files like *transformer_tester.py*.
+If you just want to use our models, **do not run** *trainer files*. Run this to start training any model you want such as *transformer_trainer.py*, or test the model with some images through tester files like *transformer_tester.py*.
 ```
 python <relative file_path>
 ```
-Run ```python GUI.py``` to have a better experience
+Run ```python infer.py``` to have a better experience
 
 ## Acknowledgement
 [1] F. Butt, L. Hussain, A. Mahmood, and K. Lone. Artificial intelligence based accurately load forecasting system to forecast short and medium-term load demands. Mathematical Biosciences and Engineering, 18:400–425, 04 2021. doi: 10.3934/mbe.2021022.
