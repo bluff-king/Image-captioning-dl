@@ -54,7 +54,7 @@ wandb login <your_api_key>
 ```
 
 ## Train, Test and GUI
-If you just want to use our models, do not run again. Run this to start training any model you want such as *transformer_trainer.py*, or test the model with some images.
+If you just want to use our models, **do not run** *trainer files*. Run this to start training any model you want such as *transformer_trainer.py*, or test the model with some images through testter files like *transformer_tester.py*.
 ```
 python <relative file_path>
 ```
