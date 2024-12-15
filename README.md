@@ -4,9 +4,10 @@
 
 ![demo](demo.gif)
 
-Image captioning integrates computer vision and natural language processing, transforming visual content into meaningful text. 
+Image captioning integrates computer vision and natural language processing, transforming visual content into meaningful text.
 
 In this project, we implement three image captioning methods:
+
 - **Encoder-Decoder Framework**: A straightforward and effective baseline for generating captions.
 - **CNN-LSTM with Attention**: Improves caption quality by focusing on important regions within an image.
 - **Transformer Model**: Leverages advanced architecture to efficiently handle complex relationships and large datasets.
@@ -14,6 +15,7 @@ In this project, we implement three image captioning methods:
 All the code is in [Python](https://www.python.org/) language, we use [Pytorch](https://pytorch.org/) to access to pretrained models, architectures and accelerate code execution on GPUs with [CUDA](https://developer.nvidia.com/cuda-downloads). The GUI is built using the [Gradio](https://www.gradio.app/)  library for visualization purposes.
 
 ## Project structure
+
 ```
 |___data
 |___datasets
@@ -32,38 +34,50 @@ All the code is in [Python](https://www.python.org/) language, we use [Pytorch](
 ```
 
 ## Requirements
+
 - Python version 3.10 or higher
-- CUDA version 12.0 or higher
-- All necessary library in the code via ```pip install <library_name>```
+- CUDA version 12.0 or higher (for GPU training and inference)
+- All necessary library in the code via ```pip install -r requirements.txt```
+
 ## Installation
+
 Clone the repository, change the current working directory to this repository's root folder:
+
 ```
 git clone https://github.com/bluff-king/Image-captioning-dl.git
 ```
+
 ```
 cd Image-captioning-dl
 ```
+
 Download data from [Kaggle](https://www.kaggle.com/) follow [this link](https://www.kaggle.com/datasets/adityajn105/flickr8k/code), extract and put the folder **flickr8k** inside data folder, it should looks like this
+
 ```
 |___data
       |___flickr8k
               |___captions.txt
               |___Images
 ```
-Then, go to [CHECKPOINTS link](https://husteduvn-my.sharepoint.com/personal/thanh_vt220066_sis_hust_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fthanh%5Fvt220066%5Fsis%5Fhust%5Fedu%5Fvn%2FDocuments%2FDL%2DImg%2Dcaptioning&ga=1) to download the models with filename extension *.pth* and put it into **checkpoints** folder.
-If you want to visualize the training process, log in to W&B and get your API key, then run this in the terminal: 
+
+Then, go to [CHECKPOINTS link](https://husteduvn-my.sharepoint.com/personal/thanh_vt220066_sis_hust_edu_vn/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fthanh%5Fvt220066%5Fsis%5Fhust%5Fedu%5Fvn%2FDocuments%2FDL%2DImg%2Dcaptioning&ga=1) to download the models with filename extension *.pth* and put them into **checkpoints** folder.
+If you want to visualize the training process, log in to W&B and get your API key, then run this in the terminal:
+
 ```
 wandb login <your_api_key>
 ```
 
-## Train, Test and GUI
+## Training and testing
+
 If you just want to use our models, **do not run** *trainer files*. Run this to start training any model you want such as *transformer_trainer.py*, or test the model with some images through tester files like *transformer_tester.py*.
+
 ```
 python <relative file_path>
 ```
-Run ```python infer.py``` to have a better experience
 
+Run ```python infer.py``` for the GUI version.
 ## Acknowledgement
+
 [1] F. Butt, L. Hussain, A. Mahmood, and K. Lone. Artificial intelligence based accurately load forecasting system to forecast short and medium-term load demands. Mathematical Biosciences and Engineering, 18:400–425, 04 2021. doi: 10.3934/mbe.2021022.
 
 [2] A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit, and N. Houlsby. An image is worth 16x16 words: Transformers for image recognition at scale, 2021. URL [https://arxiv.org/abs/2010.11929].
@@ -87,10 +101,12 @@ Run ```python infer.py``` to have a better experience
 [11] Y. Chu, X. Yue, L. Yu, M. Sergei, Z. Wang, and Y. Zhang. Automatic image captioning based on resnet50 and lstm with soft attention. Wirel. Commun. Mob. Comput., 2020, Jan. 2020. ISSN 1530-8669. doi: 10.1155/2020/8909458. URL [https://doi.org/10.1155/2020/8909458].
 
 ## License
+
 This project is licensed under the [MIT License](https://mit-license.org/).
 
 ## Contributors
-- [Lương Hữu Thành](https://github.com/fisherman611) - 20225458 
+
+- [Lương Hữu Thành](https://github.com/fisherman611) - 20225458
 - [Vũ Trung Thành](https://github.com/thanh309) - 20220066
 - [Nguyễn Mậu Trung](https://github.com/Pearlcentt) - 20225534
 - [Đoàn Anh Vũ](https://github.com/bluff-king) - 20225465
