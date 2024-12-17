@@ -90,7 +90,7 @@ for model_name, checkpoint_path in checkpoint_paths.items():
 
 warning_str = ''
 if load_fail:
-    warning_str += f' (Fail to load model(s): {', '.join(load_fail)})'
+    warning_str += f' (Fail to load model(s): {", ".join(load_fail)})'
 
 
 # This function is used to generate caption for each model
